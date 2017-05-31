@@ -98,7 +98,6 @@ class MfaController extends Controller
 		$su_user_id = $request->super_admin_id;
 		$user_secrete = $request->user_input_secret;
 		
-		
 		$user =   admin_user::select('super_secret','username')->where('id', $su_user_id)->first();
 		$google2fa = new Google2FA();
 		$valid = $google2fa->verifyKey($user->super_secret, $user_secrete);
@@ -106,17 +105,13 @@ class MfaController extends Controller
 		if($valid < 1 Or $valid == NULL Or $valid == "")
 		{
 			$request->session()->flash('error_message', 'Invalid Authentication Key! This incident will be reported!');
-			$Message = "Unsuccessful MFA attempt for Super Admin \n\n Unsuccessful MFA entered on Admin Portal \n Invalid Timeslot \n Details are :\n Username :".$user->super_username."\n IP Address :".$this->aws->getClientIps()."\n Time of Event :".Carbon::now();
-			$result = $this->aws->send_admin_alerts($this->Alert_SuperAdmin,$Message);
 			return redirect('Admin/verify-MFA');
-			//return redirect()->back();
-			//return view('verify',['user_id' => $su_user_id, 'username'=> $user->super_username, 'admin_type'=>'superadmin']);
 		}
 		else
 		{
-			$request->session()->forget('user_id');
+			/*$request->session()->forget('user_id');
 			$request->session()->forget('username');
-			$request->session()->forget('admin_type');
+			$request->session()->forget('admin_type');*/
 			$request->session()->put('is_super_admin',TRUE);
 			return redirect('Admin/SuperAdminDashboard');
 			//Session::set('super_id', $su_user_id);

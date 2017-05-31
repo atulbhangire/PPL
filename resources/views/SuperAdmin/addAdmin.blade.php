@@ -19,11 +19,11 @@ License: You must have a valid license purchased only from themeforest(the above
     <!--<![endif]-->
     <!-- BEGIN HEAD -->
     <head>
-        <title>SPTulsian.com | Super Admin | Admin Management</title>
+        <title>PPL | Super Admin | Admin Management</title>
         @include ('layouts.meta')
         @include ('layouts.super_admin.css')
         <!-- BEGIN PAGE LEVEL PLUGINS -->
-        {{ Html::style('admin/assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css') }}
+        <!-- {{ Html::style('admin/assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css') }} -->
         <!-- END PAGE LEVEL PLUGINS -->
     </head>
 
@@ -93,14 +93,32 @@ License: You must have a valid license purchased only from themeforest(the above
 												<input type="hidden" name="admin_id" value="{{ Session::has('edit_id') ? Session::get('edit_id') : '' }}">
 												<div class="form-body">
 													<div class="form-group ">
-														<label class="col-md-3 control-label">Username</label>
+														<label class="col-md-3 control-label">First Name</label>
 														<div class="col-md-6">
                                                             <div class="err">
-                                                                <input type="hidden" name="username_hidden_old" value="{{ Session::has('edit_username') ? Session::get('edit_username') : '' }}" pattern="^\S+$">
-    															<input type="text" id="username" name="username" class="form-control" placeholder="Enter username (E.g. user_name)" value="{{ Session::has('edit_username') ? Session::get('edit_username') : '' }}" pattern="^\S+$">
+    															<input type="text" id="first_name" name="first_name" class="form-control" placeholder="Enter First Name " value="{{ Session::has('edit_first_name') ? Session::get('edit_first_name') : '' }}">
                                                             </div>
 														</div>
 													</div>
+
+                                                    <div class="form-group ">
+                                                        <label class="col-md-3 control-label">Last Name</label>
+                                                        <div class="col-md-6">
+                                                            <div class="err">
+                                                                <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Enter Last Name " value="{{ Session::has('edit_last_name') ? Session::get('edit_last_name') : '' }}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group ">
+                                                        <label class="col-md-3 control-label">Email</label>
+                                                        <div class="col-md-6">
+                                                            <div class="err">
+                                                                <input type="email" id="email" name="email" class="form-control" placeholder="Enter Last Name " value="{{ Session::has('edit_email') ? Session::get('edit_email') : '' }}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
 													<div class="form-group">
 														<label class="col-md-3 control-label">Password</label>
 														<div class="col-md-6">
@@ -109,99 +127,41 @@ License: You must have a valid license purchased only from themeforest(the above
                                                             </div>
 														</div>
 													</div>
+
 													<div class="form-group">
-														<label class="col-md-3 control-label">Change Password</label>
+														<label class="col-md-3 control-label">Contact Number</label>
 														<div class="col-md-6">
                                                             <div class="err">
-                                                                <input type="number" id="change_password" name="change_password" class="form-control" placeholder="Enter number of days in which user is forced to change password" value="{{ Session::has('edit_change_password') ? Session::get('edit_change_password') : '' }}">
+                                                                <input type="text" id="contact_no" name="contact_no" class="form-control" placeholder="Enter Contact No." value="{{ Session::has('edit_contact_no') ? Session::get('edit_contact_no') : '' }}">
                                                             </div>
 														</div>
 													</div>
-													<div class="form-group">
-														<label class="col-md-3 control-label">Permissible IPs</label>
-														<div class="col-md-6">
+													
+                                                    <div class="form-group">
+                                                        <label class="col-md-3 control-label">Address</label>
+                                                        <div class="col-md-6">
                                                             <div class="err">
-                                                                <input type="text" id="permissible_ip" name="permissible_ip" class="form-control" placeholder="Enter multiple IPs as comma separated. Enter * for all IPs" value="{{ Session::has('edit_permissible_ip') ? Session::get('edit_permissible_ip') : '' }}">
+                                                                <input type="text" id="address" name="address" class="form-control" placeholder="Enter Address" value="{{ Session::has('edit_address') ? Session::get('edit_address') : '' }}">
                                                             </div>
-														</div>
-													</div>
-													<div class="form-group">
-														<label class="col-md-3 control-label">Permissible Days</label>
-														<div class="col-md-8">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="col-md-3 control-label">User Role</label>
+                                                        <div class="col-md-6">
                                                             <div class="err">
-                                                                <div class="mt-checkbox-inline">
-                                                                    <label class="mt-checkbox">
-                                                                        <input type="checkbox" id="checkbox_monday" name="checkbox[]" value="0" {{ Session::has('edit_permissible_days') ? (in_array(0, explode(',', Session::get('edit_permissible_days'))) ? 'checked' : '') : '' }}>Monday
-                                                                        <span></span>
-                                                                    </label>
-                                                                    <label class="mt-checkbox">
-                                                                        <input type="checkbox" id="checkbox_tuesday" name="checkbox[]" value="1" {{ Session::has('edit_permissible_days') ? (in_array(1, explode(',', Session::get('edit_permissible_days'))) ? 'checked' : '') : '' }}>Tuesday
-                                                                        <span></span>
-                                                                    </label>
-                                                                    <label class="mt-checkbox">
-                                                                        <input type="checkbox" id="checkbox_wednesday" name="checkbox[]" value="2" {{ Session::has('edit_permissible_days') ? (in_array(2, explode(',', Session::get('edit_permissible_days'))) ? 'checked' : '') : '' }}>Wednesday
-                                                                        <span></span>
-                                                                    </label>
-                                                                    <label class="mt-checkbox">
-                                                                        <input type="checkbox" id="checkbox_thursday" name="checkbox[]" value="3" {{ Session::has('edit_permissible_days') ? (in_array(3, explode(',', Session::get('edit_permissible_days'))) ? 'checked' : '') : '' }}>Thursday
-                                                                        <span></span>
-                                                                    </label>
-                                                                    <label class="mt-checkbox">
-                                                                        <input type="checkbox" id="checkbox_friday" name="checkbox[]" value="4" {{ Session::has('edit_permissible_days') ? (in_array(4, explode(',', Session::get('edit_permissible_days'))) ? 'checked' : '') : '' }}>Friday
-                                                                        <span></span>
-                                                                    </label>
-                                                                    <label class="mt-checkbox">
-                                                                        <input type="checkbox" id="checkbox_saturday" name="checkbox[]" value="5" {{ Session::has('edit_permissible_days') ? (in_array(5, explode(',', Session::get('edit_permissible_days'))) ? 'checked' : '') : '' }}>Saturday
-                                                                        <span></span>
-                                                                    </label>
-                                                                    <label class="mt-checkbox">
-                                                                        <input type="checkbox" id="checkbox_sunday" name="checkbox[]" value="6" {{ Session::has('edit_permissible_days') ? (in_array(6, explode(',', Session::get('edit_permissible_days'))) ? 'checked' : '') : '' }}>Sunday
-                                                                        <span></span>
-                                                                    </label>
-                                                                </div>
+                                                                <select id="admin_role" name="admin_role" class="form-control" value="{{ Session::has('edit_admin_role') ? Session::get('edit_admin_role') : '' }}">
+                                                                    <option value="HEAD MANAGER">HEAD MANAGER</option>
+                                                                    <option value="HEAD OPERATOR">HEAD OPERATOR</option>
+                                                                    <option value="REGION HEAD">REGION HEAD</option>
+                                                                    <option value="REGION OPERATOR">REGION OPERATOR</option>
+                                                                    <option value="BRANCH MANAGER">BRANCH MANAGER</option>
+                                                                    <option value="BRANCH OPERATOR">BRANCH OPERATOR</option>
+                                                                </select>
                                                             </div>
-														</div>
-													</div>
-													<div class="form-group">
-														<label class="col-md-3 control-label">Permissible Timerange</label>
-														<div class="col-md-3">
-                                                            <div class="err">
-                                                                <div class="input-icon">
-    																<i class="fa fa-clock-o"></i>
-    																<input type="text" class="form-control timepicker timepicker-24" id="permissible_time_start" name="permissible_time_start" placeholder="From" value="{{ Session::has('edit_permissible_starttime') ? Session::get('edit_permissible_starttime') : '' }}">
-                                                                </div>
-															</div>
-														</div>
-														<div class="col-md-3">
-                                                            <div class="err">
-                                                                <div class="input-icon">
-    																<i class="fa fa-clock-o"></i>
-    																<input type="text" class="form-control timepicker timepicker-24" id="permissible_time_end" name="permissible_time_end" placeholder="To" value="{{ Session::has('edit_permissible_endtime') ? Session::get('edit_permissible_endtime') : '' }}">
-                                                                </div>
-															</div>
-														</div>
-													</div>
-													<div class="form-group">
-														<label class="col-md-3 control-label">Permissible Zones</label>
-														<div id="div_admin_zone" class="col-md-6">
-                                                            <div class="err">
-                                                                <div class="mt-checkbox-inline">
-        															@if($admin_zones)
-        																@foreach ($admin_zones as $admin_zone)
-                                                                            <label id="label_admin_zone" class="mt-checkbox">
-                                                                                <input type="hidden" name="checkbox_zone[Zone_{{ $admin_zone->zn_zone_code }}]" value="0" />
-                                                                                <input type="checkbox" id="checkbox_{{ $admin_zone->zn_id }}" name="checkbox_zone[Zone_{{ $admin_zone->zn_zone_code }}]" value="1" {{ Session::has('Zone_' . $admin_zone->zn_zone_code) ? (Session::get('Zone_' . $admin_zone->zn_zone_code) == 1) ? 'checked' : '' : '' }}>{{ $admin_zone->zn_name }}
-                                                                                <span></span>
-                                                                            </label>
-                                                                            <BR/>
-        																@endforeach
-        															@else
-        																<label id="label_admin_zone" class="control-label">Zones are not available!</label>
-        															@endif
-                                                                </div>
-                                                            </div>
-														</div>
-													</div>
+                                                        </div>
+                                                    </div>
+
                                                     <div class="form-group">
                                                         <label class="col-md-3 control-label">Admin Status</label>
                                                         <div class="col-md-6">
@@ -234,7 +194,7 @@ License: You must have a valid license purchased only from themeforest(the above
 													<div class="form-actions">
 														<div class="row">
 															<div class="col-md-offset-3 col-md-4">
-																<button type="submit" class="btn green">Submit</button>
+																<button type="submit" class="btn blue">Submit</button>
 															</div>
 														</div>
 													</div>
@@ -262,13 +222,13 @@ License: You must have a valid license purchased only from themeforest(the above
         <!-- END FOOTER -->
         @include ('layouts.super_admin.js')
         <!-- BEGIN PAGE LEVEL PLUGINS -->
-        {{ Html::script('admin/assets/global/plugins/jquery-validation/js/jquery.validate.min.js') }}
-        {{ Html::script('admin/assets/global/plugins/jquery-validation/js/additional-methods.min.js') }}
+        {{ Html::script('admin/assets/js/jquery.validate.min.js') }}
+        <!-- {{ Html::script('admin/assets/global/plugins/jquery-validation/js/additional-methods.min.js') }}
         {{ Html::script('admin/assets/global/plugins/select2/js/select2.full.min.js') }}
         {{ Html::script('admin/assets/global/plugins/moment.min.js') }}
         {{ Html::script('admin/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}
         {{ Html::script('admin/assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}
-        {{ Html::script('admin/assets/pages/scripts/components-date-time-pickers.min.js') }}
+        {{ Html::script('admin/assets/pages/scripts/components-date-time-pickers.min.js') }} -->
         <!-- END PAGE LEVEL PLUGINS -->
         <!-- BEGIN CUSTOM SCRIPT -->
         <script type="text/javascript">

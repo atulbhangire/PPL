@@ -50,9 +50,9 @@ License: You must have a valid license purchased only from themeforest(the above
                         <label class="control-label">Enter MFA Key</label>
                         <input type="text" name="user_input_secret" class="form-control" autocomplete="off" autofocus="on" />
                     </div>
-                    <div class="row">
-                        <div class="margin-top-10 pull-right">
-                            <button type="submit" class="btn green"> Submit </button>
+                    <div class="form-group">
+                        <div class="margin-top-10">
+                            <button type="submit" class="btn blue"> Submit </button>
                         </div>
                     </div>
                 </form>

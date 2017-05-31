@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-// use App\admin_users;
-// use App\admin_zones;
+use App\users;
+use App\ppl_zones;
 use Session;
 use Crypt;
 use Config;
@@ -16,47 +16,48 @@ use Carbon\Carbon;
 
 class SuperAdminController extends Controller
 {
-	public function __construct()
+	public function __construct(users $users, ppl_zones $ppl_zones)
 	{
-		/*$this->admin_users = $admin_users;
-		$this->admin_zones = $admin_zones;
-		$this->aws = new CustomAwsController;
-		$this->Alert_SuperAdmin = Config::get('config_path_vars.Alert_SuperAdmin');*/
+		$this->users = $users;
+		$this->ppl_zones = $ppl_zones;
+		// $this->aws = new CustomAwsController;
+		// $this->Alert_SuperAdmin = Config::get('config_path_vars.Alert_SuperAdmin');*/
 	}
 	public function showSuperAdminDashboard(Request $request)
 	{
 		if($request->session()->get('is_super_admin'))
 		{
-			//$admin_users = $this->admin_users->orderBy('created_at','desc')->get();
-			/*$admin_users = $this->admin_users->all();
-			$admin_zones = $this->admin_zones::select('zn_zone_code', 'zn_name', 'zn_description')->get();*/
-			return view('SuperAdmin.dashboard');
+			$users = $this->users->all();
+			return view('SuperAdmin.dashboard', compact('users'));
 		}
 		else
 		{
-			return redirect('/');
+			return redirect('/Admin');
 		}
 	}
-	/*public function showAddAdminView(Request $request)
+	public function showAddAdminView(Request $request)
 	{
 		if($request->session()->get('is_super_admin'))
 		{
-			$admin_zones = $this->admin_zones->select('zn_id')->exists();
-			if($admin_zones)
+			$ppl_zones = $this->ppl_zones->select('zone_id')->exists();
+			// $ppl_zones = $this->ppl_zones->get();
+			if($ppl_zones)
 			{
-				$admin_zones = $this->admin_zones->select('zn_id', 'zn_name', 'zn_zone_code')->get();
+				$ppl_zones = $this->ppl_zones->select('zone_id', 'zone_name', 'zone_code')->get();
 			}
 			else
 			{
-				$admin_zones = NULL;
+				$ppl_zones = NULL;
 			}
-			return view('SuperAdmin.addAdmin', compact('admin_zones'));
+			return view('SuperAdmin.addAdmin');
 		}
 		else
 		{
 			return redirect('/');
 		}
 	}
+
+	/*
 	public function resetAdmin($id)
 	{
 		$data = array(
@@ -77,25 +78,25 @@ class SuperAdminController extends Controller
 			$this->aws->send_admin_alerts($this->Alert_SuperAdmin,$Message);
 			return redirect('/Admin/SuperAdminDashboard')->with('admin_danger', 'MFA key for ' . $admin_username->adm_username . ' reset unsuccessful.');
 		}
-	}
+	} */
 	public function getAdmin(Request $request)
 	{
-		$username = $request->input('username');
+		// dd($request);
+
+		$first_name = $request->input('first_name');
+		$last_name = $request->input('last_name');
+		$email = $request->input('email');
 		$password = $request->input('password');
-		$change_password = $request->input('change_password');
-		$permissible_ip = $request->input('permissible_ip');
-		$checkbox_permissible_days = $request->input('checkbox');
-		$permissible_days = implode(",", $checkbox_permissible_days);
-		$permissible_time_start = $request->input('permissible_time_start');
-		$permissible_time_end = $request->input('permissible_time_end');
-		$permissible_timerange = $permissible_time_start . ", " . $permissible_time_end;
+		$contact_no = $request->input('contact_no');
+		$address = $request->input('address');
+		$admin_role = $request->input('admin_role');
 		$admin_status = $request->input('admin_status');
-		$checkbox_zone = $request->input('checkbox_zone');
-		if(!empty($username) and !empty($password) and isset($change_password) and ($change_password >= 0) and !empty($permissible_ip) and isset($permissible_days) and !empty($permissible_timerange) and isset($admin_status))
+
+		if(!empty($first_name) and !empty($last_name) and !empty($email) and !empty($password) and !empty($contact_no) and isset($admin_status))
 		{
-			if ($this->admin_users::where('adm_username', '=', $username)->exists())
+			if ($this->users::where('email', '=', $email)->exists())
 			{
-				return redirect('/Admin/SuperAdminDashboard')->with('admin_danger', 'Error! ' . $username . ' already exists.');
+				return redirect('/Admin/SuperAdminDashboard')->with('admin_danger', 'Error! ' . $email . ' already exists.');
 			}
 		}
 		else
@@ -103,44 +104,38 @@ class SuperAdminController extends Controller
 			return redirect('/Admin/SuperAdminDashboard')->with('admin_danger', 'Error! Something went wrong.');
 		}
 		$data = array(
-			'username' => $username,
+			'first_name' => $first_name,
+			'last_name' => $last_name,
+			'email' => $email,
 			'password' => $password,
-			'change_password' => $change_password,
-			'permissible_ip' => $permissible_ip,
-			'permissible_days' => $permissible_days,
-			'permissible_timerange' => $permissible_timerange,
+			'contact_no' => $contact_no,
+			'address' => $address,
+			'admin_role' => $admin_role,
 			'is_active' => $admin_status
 		);
-		$saved = $this->saveAdmin($data, $checkbox_zone);
+		$saved = $this->saveAdmin($data);
 		if($saved)
 		{
-			$Message = "Admin: " . $request->input('username') . " added successfully \n IP Address :".$this->aws->getClientIps()."\n Time of Event :".Carbon::now();
-			$this->aws->send_admin_alerts($this->Alert_SuperAdmin,$Message);
-			return redirect('/Admin/SuperAdminDashboard')->with('admin_message', $request->input('username') . ' added successfully!');
+			return redirect('/Admin/SuperAdminDashboard')->with('admin_message', $request->input('email') . ' added successfully!');
 		}
 		else
 		{
-			return redirect('/Admin/SuperAdminDashboard')->with('admin_danger', $request->input('username') . ' was not added!');
+			return redirect('/Admin/SuperAdminDashboard')->with('admin_danger', $request->input('email') . ' was not added!');
 		}
 	}
-	public function saveAdmin($data, $checkbox_zone)
+
+	public function saveAdmin($data)
 	{
-		$this->admin_users->adm_username = $data['username'];
-		$this->admin_users->adm_password = Crypt::encrypt($data['password']);
-		$this->admin_users->change_password = $data['change_password'];
-		$this->admin_users->last_password_changed = Date('Y-m-d H:i:s');
-		$this->admin_users->permissible_ip = $data['permissible_ip'];
-		$this->admin_users->permissible_days = $data['permissible_days'];
-		$this->admin_users->permissible_timerange = $data['permissible_timerange'];
-		$this->admin_users->is_active = $data['is_active'];
-		if(!empty($checkbox_zone))
-		{
-			foreach ($checkbox_zone as $key => $value)
-			{
-				$this->admin_users->$key = $value;
-			}
-		}
-		if($this->admin_users->save())
+		$this->users->first_name = $data['first_name'];
+		$this->users->last_name = $data['last_name'];
+		$this->users->email = $data['email'];
+		$this->users->password = Crypt::encrypt($data['password']);
+		$this->users->contact_no = $data['contact_no'];
+		$this->users->address = $data['address'];
+		$this->users->admin_role = $data['admin_role'];
+		$this->users->is_active = $data['is_active'];
+		
+		if($this->users->save())
 		{
 			return TRUE;
 		}
@@ -149,6 +144,7 @@ class SuperAdminController extends Controller
 			return FALSE;
 		}
 	}
+	/*
 	public function editAdmin($id)
 	{
 		$result = $this->admin_users::select('*')->where(array('adm_user_id' => $id))->first();

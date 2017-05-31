@@ -25,17 +25,21 @@ Route::get('Admin/login', ['as' => '/Admin/login', 'uses' => 'HomeController@ind
 
 Route::post('Admin/login', ['as' => '/Admin/login', 'uses' => 'HomeController@login']);
 
+Route::get('Admin/logout', ['as' => '/Admin/logout', 'uses'=>'HomeController@logout']);
+
 Route::get('Admin/authenticate-MFA', ['as' => '/Admin/verify-MFA', 'uses' => 'Auth\MfaController@showMFAWithQR']);
 
 Route::get('Admin/verify-MFA', ['as' => '/Admin/verify-MFA', 'uses' => 'Auth\MfaController@showMFAWithoutQR']);
 
 Route::post('Admin/verifysuadminmfa',['as' => '/Admin/verifysuadminmfa', 'uses' => 'Auth\MfaController@verifysuadminmfa']);
 
-Route::get('Admin/index', ['as' => '/Admin/index', 'uses' => 'Auth\MfaController@showAdminIndex']);
-
 Route::get('Admin/SuperAdminDashboard', ['as' => '/Admin/SuperAdminDashboard', 'uses' => 'SuperAdmin\SuperAdminController@showSuperAdminDashboard']);
 
-/*Route::group(['middleware' => ['web']], function(){
+Route::get('Admin/SuperAdmin/AddAdmin', ['as' => '/Admin/SuperAdmin/AddAdmin', 'uses' => 'SuperAdmin\SuperAdminController@showAddAdminView']);
+
+Route::post('Admin/SuperAdmin.getAdmin', ['as' => '/Admin/SuperAdmin.getAdmin', 'uses' => 'SuperAdmin\SuperAdminController@getAdmin']);
+
+Route::group(['middleware' => ['web']], function(){
 	Route::get('/vuejscrud', 'BlogController@vueCrud');
 	Route::resource('vueitems', 'BlogController');
-});*/
+});
